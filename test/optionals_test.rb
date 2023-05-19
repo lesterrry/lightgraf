@@ -13,13 +13,13 @@ class LightgrafOptionalsTest < Minitest::Test
 	def test_disable_quotes
 		strings = [
 			[
-				%(<span class="main">Механик сказал: "Машине конец</span>, тем более если на ней стоит <em id='a'>'V6'</em>"),
-				%(<span class="main">Механик сказал: «Машине конец</span>, тем более если на ней стоит <em id='a'>„V6“</em>»),
+				%(<span class="main">Механик сказал: "Машине конец</span>, тем более если на ней стоит <em id='a'>'В6'</em>"),
+				%(<span class="main">Механик сказал: «Машине конец</span>, тем более если на ней стоит <em id='a'>„В6“</em>»),
 				false
 			],
 			[
-				%(<span class="main">Механик сказал: "Машине конец</span>, тем более если на ней стоит <em id='a'>'V12'</em>"),
-				%(<span class="main">Механик сказал: "Машине конец</span>, тем более если на ней стоит <em id='a'>'V12'</em>"),
+				%(<span class="main">Механик сказал: "Машине конец</span>, тем более если на ней стоит <em id='a'>'В12'</em>"),
+				%(<span class="main">Механик сказал: "Машине конец</span>, тем более если на ней стоит <em id='a'>'В12'</em>"),
 				true
 			]
 		]
