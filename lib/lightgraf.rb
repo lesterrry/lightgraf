@@ -25,7 +25,8 @@ module Lightgraf
 		text = CGI.unescape_html text
 		fixed = ''
 		inside = []
-		quoter = []
+		quote_char = []
+		quote_lang = []
 		(0..text.length - 1).each do |i|
 			char = text[i]
 			if char == %(<)
@@ -36,37 +37,58 @@ module Lightgraf
 				inside << :quote_a
 			elsif char == %(»)
 				inside.pop if inside.last == :quote_a
-			elsif inside.last != :tag and %w[' "].include?(char) and !disable_quotes
+			elsif inside.last != :tag and %w[' " `].include?(char) and !disable_quotes
 				case inside.last
 				when :quote_a
-					if char == quoter.last
-						fixed += %(»)
+					if char == quote_char.last
+						fixed += quote_lang.last == :ru ? %(») : %(”)
 						inside.pop
-						quoter = []
+						quote_char = []
 					else
-						fixed += %(„)
+						fixed += quote_lang.last == :ru ? %(„) : %(“)
 						inside << :quote_b
-						quoter << char
+						quote_char << char
 					end
 				when :quote_b
-					if char == quoter.last
-						fixed += %(“)
+					if char == quote_char.last
+						fixed += quote_lang.last == :ru ? %(“) : %(”)
 						inside << :quote_a
-						quoter.pop
+						quote_char.pop
 					else
-						fixed += %(»)
+						fixed += quote_lang.last == :ru ? %(») : %(”)
 						inside.pop
-						quoter = []
+						quote_char = []
 					end
 				when nil
-					fixed += %(«)
+					if text[i + 1] # /[а-яА-Я]/
+						quote_lang = [:ru]
+					end
+					fixed += quote_lang.last == :ru ? %(«) : %(“)
 					inside << :quote_a
-					quoter = [char]
+					quote_char = [char]
 				end
 				next
 			end
 			fixed += char
 		end
 		html_encode ? CGI.escape_html(fixed) : fixed
+	end
+
+		private
+
+	# Shows whether cyrillic is present in a block of text
+	# == Parameters:
+	# +text+:: +String+ of text to format
+	# +disabled+:: (Optional) +Array+ of symbols which represent format options to disable. Refer to Readme for guidance.
+	# == Returns:
+	# +String+:: Formatted text
+	def cyrillic?(text, index: nil, runs: 5)
+		if index.nil?
+			!text.match('/[а-яА-Я]/').nil?
+		else
+			runs.times do
+				cyrillic? text[index]
+			end
+		end
 	end
 end
