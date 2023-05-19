@@ -8,6 +8,7 @@
 
 require 'test_helper'
 
+# Tests whether formatting incorrect quotes works
 class LightgrafQuotesRuTest < Minitest::Test
 	def test_simple_quotes
 		strings = [
@@ -40,9 +41,7 @@ class LightgrafQuotesRuTest < Minitest::Test
 				%(«Альфа», «Бета» и «Омега»)
 			]
 		]
-		strings.each do |i|
-			assert_equal Lightgraf.fix(i[0], html_encode: false), i[1]
-		end
+		assert_string_array strings
 	end
 
 	def test_complicated_quotes
@@ -80,9 +79,7 @@ class LightgrafQuotesRuTest < Minitest::Test
 				%(«„Монблан“ серии „Майстерштюк“ — лучшие ручки из когда-либо созданных» — сказал Ричард)
 			]
 		]
-		strings.each do |i|
-			assert_equal Lightgraf.fix(i[0], html_encode: false), i[1]
-		end
+		assert_string_array strings
 	end
 
 	def test_mixed_quotes
@@ -104,9 +101,7 @@ class LightgrafQuotesRuTest < Minitest::Test
 				%(Механик сказал: „Машине конец, тем более если на ней стоит «V6»“)
 			]
 		]
-		strings.each do |i|
-			assert_equal Lightgraf.fix(i[0], html_encode: false), i[1]
-		end
+		assert_string_array strings
 	end
 
 	def test_broken_quotes
@@ -116,9 +111,7 @@ class LightgrafQuotesRuTest < Minitest::Test
 				%(Генри произнес: «Здесь не вопрос »что?«, а вопрос »как?«. Ставлю на родительный»)
 			]
 		]
-		strings.each do |i|
-			assert_equal Lightgraf.fix(i[0], html_encode: false), i[1]
-		end
+		assert_string_array strings
 	end
 
 end

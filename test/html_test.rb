@@ -8,6 +8,7 @@
 
 require 'test_helper'
 
+# Tests whether HTML integration works seamlessly
 class LightgrafHtmlTest < Minitest::Test
 	def test_tags_ignore
 		strings = [
@@ -20,8 +21,34 @@ class LightgrafHtmlTest < Minitest::Test
 				%(<span class="main">Механик сказал: «Машине конец</span>, тем более если на ней стоит <em id='a'>„V12“</em>»)
 			],
 		]
-		strings.each do |i|
-			assert_equal Lightgraf.fix(i[0], html_encode: false), i[1]
-		end
+		assert_string_array strings
+	end
+
+	def test_read_escape
+		strings = [
+			[
+				%(C&#x3a;&#x5c;public&#x5c;root&#x5c;Танец &quot;Желание&quot;),
+				%(C:\\public\\root\\Танец «Желание»)
+			]
+		]
+		assert_string_array strings
+	end
+
+	def test_write_escape
+		strings = [
+			[
+				%(Юристы "Бобр & Бобр"),
+				%(Юристы «Бобр &amp; Бобр»),
+				nil,
+				true
+			],
+			[
+				%(Юристы "Бобр & Бобр"),
+				%(Юристы «Бобр & Бобр»),
+				nil,
+				false
+			]
+		]
+		assert_string_array strings
 	end
 end

@@ -19,7 +19,7 @@ module Lightgraf
 	# +disabled+:: (Optional) +Array+ of symbols which represent format options to disable. Refer to Readme for guidance.
 	# == Returns:
 	# +String+:: Formatted text
-	def self.fix(text, html_encode: true, disabled: [])
+	def self.fix(text, html_encode: true, disable_quotes: false)
 		raise TypeError unless text.is_a? String
 
 		text = CGI.unescape_html text
@@ -36,7 +36,7 @@ module Lightgraf
 				inside << :quote_a
 			elsif char == %(»)
 				inside.pop if inside.last == :quote_a
-			elsif inside.last != :tag and %w[' "].include?(char)
+			elsif inside.last != :tag and %w[' "].include?(char) and !disable_quotes
 				case inside.last
 				when :quote_a
 					if char == quoter.last
