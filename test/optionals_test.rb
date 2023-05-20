@@ -31,4 +31,15 @@ class LightgrafOptionalsTest < Minitest::Test
 		]
 		assert_string_array strings
 	end
+
+	def test_disable_nbsp
+		strings = [
+			[
+				%(Я люблю его а он не любит меня),
+				%(Я люблю его а он не любит меня),
+				{ disable_nbsp: true }
+			]
+		]
+		assert_string_array strings, ignore_nbsp: false
+	end
 end

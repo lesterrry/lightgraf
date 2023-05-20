@@ -9,7 +9,15 @@ module Lightgraf
 	module Internal
 		include Fixtures
 
-		def self.fix(text, html_encode: true, disable_quotes: false, disable_hyphens: false, lang_check_max_take: 5)
+		def self.fix(
+			text,
+			html_encode: true,
+			disable_quotes: false,
+			disable_hyphens: false,
+			disable_nbsp: false,
+			lang_check_max_take: 5,
+			nbsp_max_length: 3
+		)
 			raise TypeError unless text.is_a? String
 
 			text = CGI.unescape_html text
@@ -30,10 +38,13 @@ module Lightgraf
 					inside << :quote_a
 				elsif [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
 					inside.pop if inside.last == :quote_a
-				elsif INCORRECT_HYPHENS.include?(char) and (i.zero? or SPACES.include?(text[i - 1])) and !disable_hyphens
+				elsif !disable_nbsp and SPACES.include?(char) and (i < nbsp_max_length or (!HYPHENS.include?(text[i - 1]) and whitespace?(text[(i - nbsp_max_length)..(i - 1)])) or HYPHENS.include?(text[i + 1]))
+					fixed += NBSP
+					next
+				elsif !disable_hyphens and INCORRECT_HYPHENS.include?(char) and (i.zero? or SPACES.include?(text[i - 1]))
 					fixed += HYPHEN
 					next
-				elsif INCORRECT_QUOTES.include?(char) and !disable_quotes
+				elsif !disable_quotes and INCORRECT_QUOTES.include?(char)
 					case inside.last
 					when :quote_a
 						if char == quote_char.last
@@ -81,6 +92,20 @@ module Lightgraf
 			raise TypeError unless text.is_a? String
 
 			!text.match(/[а-яА-Я]/).nil?
+		end
+
+		# Shows whether whitespace is present in a block of text
+		# == Parameters:
+		# +text+:: +String+ of text to check
+		# == Returns:
+		# +Bool+:: Whether whitespace is present
+		def self.whitespace?(text)
+			raise TypeError unless text.is_a? String
+
+			text.each_char do |i|
+				return true if SPACES.include? i
+			end
+			false
 		end
 	end
 
