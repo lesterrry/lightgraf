@@ -43,14 +43,12 @@ class LightgrafHtmlTest < Minitest::Test
 			[
 				%(Юристы "Бобр & Бобр"),
 				%(Юристы «Бобр &amp; Бобр»),
-				nil,
-				true
+				{ html_encode: true }
 			],
 			[
 				%(Юристы "Бобр & Бобр"),
 				%(Юристы «Бобр & Бобр»),
-				nil,
-				false
+				{ html_encode: false }
 			]
 		]
 		assert_string_array strings
