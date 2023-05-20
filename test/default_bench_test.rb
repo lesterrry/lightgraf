@@ -16,5 +16,6 @@ class LightgrafOptionalsTest < Minitest::Test
 			Lightgraf.fix text
 		end
 		assert_operator time.real, :<=, 0.07
+		p "Real time: #{time.real}"
 	end
 end
