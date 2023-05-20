@@ -13,6 +13,12 @@ Lightweight typography tool for Rails. It handles for you:
     `↓` \
     Мой номер — +7 (977) 417-50-96
 
+- __Spaces__:
+
+    А что я? А я ничего\
+    `↓` \
+    А(NBSP)что я?(NBSP)А(NBSP)я(NBSP)ничего
+
 ## Installation
 
 Add this line to your application's Gemfile:
