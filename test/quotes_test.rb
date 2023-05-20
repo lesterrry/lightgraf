@@ -121,31 +121,15 @@ class LightgrafQuotesEnTest < Minitest::Test
 		strings = [
 			[
 				%(Company "Dodo Pizza" is looking for couriers),
-				%(Company «Dodo Pizza» is looking for couriers)
+				%(Company “Dodo Pizza” is looking for couriers)
 			],
 			[
 				%(Company 'Sunflower' is looking for couriers),
-				%(Company «Sunflower» is looking for couriers)
+				%(Company “Sunflower” is looking for couriers)
 			],
 			[
-				%("Аврора" это крупнейший крейсер времен второй мировой),
-				%(«Аврора» это крупнейший крейсер времен второй мировой)
-			],
-			[
-				%('Нимитц' это крупнейший крейсер времен второй мировой),
-				%(«Нимитц» это крупнейший крейсер времен второй мировой)
-			],
-			[
-				%(Мы ели в лучшем ресторане Воронежа: "У Марины"),
-				%(Мы ели в лучшем ресторане Воронежа: «У Марины»)
-			],
-			[
-				%(Мы ели в лучшем ресторане Воронежа: 'У Лены'),
-				%(Мы ели в лучшем ресторане Воронежа: «У Лены»)
-			],
-			[
-				%("Альфа", 'Бета' и "Омега"),
-				%(«Альфа», «Бета» и «Омега»)
+				%("Alpha", 'Beta' and "Omega"),
+				%(“Alpha”, “Beta” and “Omega”)
 			]
 		]
 		assert_string_array strings
@@ -154,37 +138,21 @@ class LightgrafQuotesEnTest < Minitest::Test
 	def test_complicated_quotes
 		strings = [
 			[
-				%(Механик сказал: "Машине конец, тем более если на ней стоит 'В6'"),
-				%(Механик сказал: «Машине конец, тем более если на ней стоит „В6“»)
+				%(The technician said: "Your car is cooked, especially if it has 'V6'"),
+				%(The technician said: “Your car is cooked, especially if it has ‘V6’”)
 			],
 			[
-				%(Механик сказал: 'Машине конец, тем более если на ней стоит "В12"'),
-				%(Механик сказал: «Машине конец, тем более если на ней стоит „В12“»)
+				%(The technician said: 'Your car is cooked, especially if it has "V12"'),
+				%(The technician said: “Your car is cooked, especially if it has ‘V12’”)
 			],
 			[
-				%("Машине конец" — сказал механик — "Тем более если на ней стоит 'В6'"),
-				%(«Машине конец» — сказал механик — «Тем более если на ней стоит „В6“»)
+				%(Henry proclaimed: "It is not about 'where to?', but 'where?'. I go for ablative".),
+				%(Henry proclaimed: “It is not about ‘where to?’, but ‘where?’. I go for ablative”.)
 			],
 			[
-				%('Машине конец' — сказал механик — 'Тем более если на ней стоит "В12"'),
-				%(«Машине конец» — сказал механик — «Тем более если на ней стоит „В12“»)
+				%(Henry proclaimed: 'It is not about "where to?", but "where?". I go for ablative'.),
+				%(Henry proclaimed: “It is not about ‘where to?’, but ‘where?’. I go for ablative”.)
 			],
-			[
-				%(Генри произнес: "Здесь не вопрос 'куда?', а вопрос 'где?'. Ставлю на аблатив".),
-				%(Генри произнес: «Здесь не вопрос „куда?“, а вопрос „где?“. Ставлю на аблатив».)
-			],
-			[
-				%(Генри произнес: 'Здесь не вопрос "зачем?", а вопрос "почему?". Ставлю на именительный'.),
-				%(Генри произнес: «Здесь не вопрос „зачем?“, а вопрос „почему?“. Ставлю на именительный».)
-			],
-			[
-				%("'Монблан' серии 'Майстерштюк' — лучшие ручки из когда-либо созданных" — сказал Ричард),
-				%(«„Монблан“ серии „Майстерштюк“ — лучшие ручки из когда-либо созданных» — сказал Ричард)
-			],
-			[
-				%('"Монблан" серии "Майстерштюк" — лучшие ручки из когда-либо созданных' — сказал Ричард),
-				%(«„Монблан“ серии „Майстерштюк“ — лучшие ручки из когда-либо созданных» — сказал Ричард)
-			]
 		]
 		assert_string_array strings
 	end
@@ -192,25 +160,79 @@ class LightgrafQuotesEnTest < Minitest::Test
 	def test_mixed_quotes
 		strings = [
 			[
-				%(Механик сказал: «Машине конец, тем более если на ней стоит "В6"»),
-				%(Механик сказал: «Машине конец, тем более если на ней стоит „В6“»)
+				%(The technician said: “Your car is cooked, especially if it has 'V6'”),
+				%(The technician said: “Your car is cooked, especially if it has ‘V6’”)
 			],
 			[
-				%(Механик сказал: «Машине конец, тем более если на ней стоит 'В6'»),
-				%(Механик сказал: «Машине конец, тем более если на ней стоит „В6“»)
+				%(The technician said: “Your car is cooked, especially if it has "V6"”),
+				%(The technician said: “Your car is cooked, especially if it has ‘V6’”)
 			],
 			[
-				%(Механик сказал: „Машине конец, тем более если на ней стоит "В6"“),
-				%(Механик сказал: „Машине конец, тем более если на ней стоит «В6»“)
+				%(The technician said: ‘Your car is cooked, especially if it has 'V6'‘),
+				%(The technician said: ‘Your car is cooked, especially if it has “V6”‘)
 			],
 			[
-				%(Механик сказал: „Машине конец, тем более если на ней стоит 'В6'“),
-				%(Механик сказал: „Машине конец, тем более если на ней стоит «В6»“)
+				%(The technician said: ‘Your car is cooked, especially if it has "V6"‘),
+				%(The technician said: ‘Your car is cooked, especially if it has “V6”‘)
+			],
+		]
+		assert_string_array strings
+	end
+
+end
+
+# Tests whether formatting incorrect quotes works (Mixed languages)
+class LightgrafQuotesMixedTest < Minitest::Test
+	def test_simple_quotes
+		strings = [
+			[
+				%(Компания "Dodo Pizza" ищет курьеров),
+				%(Компания “Dodo Pizza” ищет курьеров)
+			],
+			[
+				%(Компания "Dodo Pizza" ищет курьеров в отдел "Системная аналитика"),
+				%(Компания “Dodo Pizza” ищет курьеров в отдел «Системная аналитика»)
+			],
+			[
+				%("Alpha", 'Бета' и "Omega"),
+				%(“Alpha”, «Бета» и “Omega”)
 			]
 		]
 		assert_string_array strings
 	end
 
+	def test_complicated_quotes
+		strings = [
+			[
+				%(Механик сказал: "Машине конец, тем более если на ней стоит 'V6'"),
+				%(Механик сказал: «Машине конец, тем более если на ней стоит ‘V6’»)
+			],
+			[
+				%(Механик сказал: 'Машине конец, тем более если на ней стоит "V12"'),
+				%(Механик сказал: «Машине конец, тем более если на ней стоит ‘V12’»)
+			],
+			[
+				%(Генри произнес: "Здесь не вопрос 'where?', а вопрос 'что?'. Ставлю на аблатив".),
+				%(Генри произнес: «Здесь не вопрос ‘where?’, а вопрос „что?“. Ставлю на аблатив».)
+			],
+			[
+				%(Генри произнес: 'Здесь не вопрос "where?", а вопрос "что?". Ставлю на аблатив'.),
+				%(Генри произнес: «Здесь не вопрос ‘where?’, а вопрос „что?“. Ставлю на аблатив».)
+			],
+			[
+				%(Henry proclaimed: "It is not about 'где?', but 'куда?'. I go for именительный".),
+				%(Henry proclaimed: “It is not about „где?“, but „куда?“. I go for именительный”.)
+			],
+			[
+				%(Henry proclaimed: 'It is not about "где?", but "куда?". I go for именительный'.),
+				%(Henry proclaimed: “It is not about „где?“, but „куда?“. I go for именительный”.)
+			],
+		]
+		assert_string_array strings
+	end
+end
+
+class LightgrafQuotesBadPracticeTest < Minitest::Test
 	def test_broken_quotes
 		strings = [
 			[

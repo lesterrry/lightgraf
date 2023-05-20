@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'lightgraf/helpers'
 require 'lightgraf/fixtures'
 
 module Lightgraf
@@ -20,9 +19,9 @@ module Lightgraf
 					inside << :tag
 				elsif char == TAG_R
 					inside.pop if inside.last == :tag
-				elsif char == QUOT_RU_A_L
+				elsif [QUOT_RU_A_L, QUOT_EN_A_L].include?(char)
 					inside << :quote_a
-				elsif char == QUOT_RU_A_R
+				elsif char == [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
 					inside.pop if inside.last == :quote_a
 				elsif inside.last != :tag and Fixtures::INCORRECT_QUOTES.include?(char) and !disable_quotes
 					case inside.last
@@ -33,7 +32,7 @@ module Lightgraf
 							quote_char = []
 							quote_lang = []
 						else
-							quote_lang << (Helpers.cyrillic?(text[i, lang_check_max_take]) ? :ru : :en)
+							quote_lang << (cyrillic?(text[i, lang_check_max_take]) ? :ru : :en)
 							fixed += quote_lang.last == :ru ? QUOT_RU_B_L : QUOT_EN_B_L
 							inside << :quote_b
 							quote_char << char
@@ -51,7 +50,7 @@ module Lightgraf
 							quote_lang = []
 						end
 					when nil
-						quote_lang = (Helpers.cyrillic?(text[i, lang_check_max_take]) ? [:ru] : [:en])
+						quote_lang = (cyrillic?(text[i, lang_check_max_take]) ? [:ru] : [:en])
 						fixed += quote_lang.last == :ru ? QUOT_RU_A_L : QUOT_EN_A_L
 						inside << :quote_a
 						quote_char = [char]
@@ -61,6 +60,17 @@ module Lightgraf
 				fixed += char
 			end
 			html_encode ? CGI.escape_html(fixed) : fixed
+		end
+
+		# Shows whether cyrillic is present in a block of text
+		# == Parameters:
+		# +text+:: +String+ of text to check
+		# == Returns:
+		# +Bool+:: Whether cyrillic is present
+		def self.cyrillic?(text)
+			raise TypeError unless text.is_a? String
+
+			!text.match(/[а-яА-Я]/).nil?
 		end
 
 	end
