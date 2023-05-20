@@ -25,4 +25,17 @@ class LightgrafOptionalsTest < Minitest::Test
 		]
 		assert_string_array strings
 	end
+
+	def test_disable_hyphens
+		strings = [
+			[
+				%(Тойота - крупнейший производитель Тойота Камри),
+				%(Тойота - крупнейший производитель Тойота Камри),
+				nil,
+				nil,
+				true
+			]
+		]
+		assert_string_array strings
+	end
 end

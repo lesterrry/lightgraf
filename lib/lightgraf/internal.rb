@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 require 'lightgraf/fixtures'
+require 'cgi'
 
 module Lightgraf
+
 	# Main internal parser
 	module Internal
 		include Fixtures
 
-		def self.fix(text, html_encode: true, disable_quotes: false, lang_check_max_take: 5)
+		def self.fix(text, html_encode: true, disable_quotes: false, disable_hyphens: false, lang_check_max_take: 5)
+			raise TypeError unless text.is_a? String
+
 			text = CGI.unescape_html text
 			fixed = ''
 			inside = []
@@ -19,11 +23,17 @@ module Lightgraf
 					inside << :tag
 				elsif char == TAG_R
 					inside.pop if inside.last == :tag
+				elsif inside.last == :tag
+					fixed += char
+					next
 				elsif [QUOT_RU_A_L, QUOT_EN_A_L].include?(char)
 					inside << :quote_a
-				elsif char == [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
+				elsif [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
 					inside.pop if inside.last == :quote_a
-				elsif inside.last != :tag and Fixtures::INCORRECT_QUOTES.include?(char) and !disable_quotes
+				elsif INCORRECT_HYPHENS.include?(char) and (i.zero? or SPACES.include?(text[i - 1])) and !disable_hyphens
+					fixed += HYPHEN
+					next
+				elsif INCORRECT_QUOTES.include?(char) and !disable_quotes
 					case inside.last
 					when :quote_a
 						if char == quote_char.last
@@ -72,6 +82,6 @@ module Lightgraf
 
 			!text.match(/[а-яА-Я]/).nil?
 		end
-
 	end
+
 end
