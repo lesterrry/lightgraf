@@ -104,11 +104,15 @@ class LightgrafQuotesRuTest < Minitest::Test
 		assert_string_array strings
 	end
 
-	def test_broken_quotes
+	def test_multilayer_quotes
 		strings = [
 			[
-				%(Генри произнес: "Здесь не вопрос "что?", а вопрос "как?". Ставлю на родительный"),
-				%(Генри произнес: «Здесь не вопрос »что?«, а вопрос »как?«. Ставлю на родительный»)
+				%(Старик произнес: "Эта мелочь смела сказать мне 'Окей, бумер, иди играй в "судоку"'. Совсем оборзели."),
+				%(Старик произнес: «Эта мелочь смела сказать мне „Окей, бумер, иди играй в «судоку»“. Совсем оборзели.»)
+			],
+			[
+				%(Старик ушел в рекурсию и сказал: "Эта мелочь смела сказать мне 'Окей, бумер, давай выдай еще "Эта мелочь смела сказать мне 'Окей, бумер, иди играй в "судоку"'. Совсем оборзели."'. Совсем оборзели."),
+				%(Старик ушел в рекурсию и сказал: «Эта мелочь смела сказать мне „Окей, бумер, давай выдай еще «Эта мелочь смела сказать мне „Окей, бумер, иди играй в «судоку»“. Совсем оборзели.»“. Совсем оборзели.»)
 			]
 		]
 		assert_string_array strings
@@ -179,6 +183,16 @@ class LightgrafQuotesEnTest < Minitest::Test
 		assert_string_array strings
 	end
 
+	def test_multilayer_quotes
+		strings = [
+			[
+				%(The old man said, "They little things dared to tell me, 'OK, boomer, go play "Sudoku"'. They are completely bonkers."),
+				%(The old man said, “They little things dared to tell me, ‘OK, boomer, go play “Sudoku”’. They are completely bonkers.”)
+			]
+		]
+		assert_string_array strings
+	end
+
 end
 
 # Tests whether formatting incorrect quotes works (Mixed languages)
@@ -238,6 +252,16 @@ class LightgrafQuotesBadPracticeTest < Minitest::Test
 			[
 				%(Генри произнес: "Здесь не вопрос "что?", а вопрос "как?". Ставлю на родительный"),
 				%(Генри произнес: «Здесь не вопрос »что?«, а вопрос »как?«. Ставлю на родительный»)
+			]
+		]
+		assert_string_array strings
+	end
+
+	def test_interrupted_quote
+		strings = [
+			[
+				%(Старик произнес: "Эта мелочь смела сказать мне 'Окей, бумер"),
+				%(Старик произнес: «Эта мелочь смела сказать мне „Окей, бумер“)
 			]
 		]
 		assert_string_array strings

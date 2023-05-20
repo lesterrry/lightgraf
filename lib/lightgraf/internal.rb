@@ -39,8 +39,8 @@ module Lightgraf
 						if char == quote_char.last
 							fixed += quote_lang.last == :ru ? QUOT_RU_A_R : QUOT_EN_A_R
 							inside.pop
-							quote_char = []
-							quote_lang = []
+							quote_char.pop
+							quote_lang.pop
 						else
 							quote_lang << (cyrillic?(text[i, lang_check_max_take]) ? :ru : :en)
 							fixed += quote_lang.last == :ru ? QUOT_RU_B_L : QUOT_EN_B_L
@@ -54,10 +54,10 @@ module Lightgraf
 							quote_char.pop
 							quote_lang.pop
 						else
-							fixed += quote_lang.last == :ru ? QUOT_RU_A_R : QUOT_EN_A_R
-							inside.pop
-							quote_char = []
-							quote_lang = []
+							quote_lang << (cyrillic?(text[i, lang_check_max_take]) ? :ru : :en)
+							fixed += quote_lang.last == :ru ? QUOT_RU_A_L : QUOT_EN_A_L
+							inside << :quote_a
+							quote_char << char
 						end
 					when nil
 						quote_lang = (cyrillic?(text[i, lang_check_max_take]) ? [:ru] : [:en])
