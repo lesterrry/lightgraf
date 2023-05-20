@@ -6,5 +6,3 @@ git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # Specify your gem's dependencies in lightgraf.gemspec
 gemspec
-gem 'irb', group: 'development', require: false
-gem 'rubocop', group: 'development', require: false
