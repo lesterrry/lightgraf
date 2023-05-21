@@ -17,6 +17,8 @@ module Lightgraf
 		QUOT_EN_A_R = %(”)
 		QUOT_EN_B_L = %(‘)
 		QUOT_EN_B_R = %(’)
+		HTML_NOBR_L = %(<nobr>)
+		HTML_NOBR_R = %(</nobr>)
 		HYPHEN      = HYPHENS[2]
 		SPACE       = SPACES[0]
 		NBSP        = SPACES[2]

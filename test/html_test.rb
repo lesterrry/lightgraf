@@ -14,15 +14,18 @@ class LightgrafHtmlTest < Minitest::Test
 		strings = [
 			[
 				%(<span>Механик сказал: "Машине конец</span>, тем более если на ней стоит <em>'В6'</em>"),
-				%(<span>Механик сказал: «Машине конец</span>, тем более если на ней стоит <em>„В6“</em>»)
+				%(<span>Механик сказал: «Машине конец</span>, тем более если на ней стоит <em>„В6“</em>»),
+				{ html_encode: true }
 			],
 			[
 				%(<span class="main-class a">Механик сказал: "Машине конец</span>, тем более если на ней стоит <em id='a'>'В12'</em>"),
-				%(<span class="main-class a">Механик сказал: «Машине конец</span>, тем более если на ней стоит <em id='a'>„В12“</em>»)
+				%(<span class="main-class a">Механик сказал: «Машине конец</span>, тем более если на ней стоит <em id='a'>„В12“</em>»),
+				{ html_encode: true }
 			],
 			[
 				%(<span class="main-class a">Механик сказал: "Машине - конец</span>, тем более если на ней стоит <em id='a'>'В12'</em>"),
-				%(<span class="main-class a">Механик сказал: «Машине — конец</span>, тем более если на ней стоит <em id='a'>„В12“</em>»)
+				%(<span class="main-class a">Механик сказал: «Машине — конец</span>, тем более если на ней стоит <em id='a'>„В12“</em>»),
+				{ html_encode: true }
 			]
 		]
 		assert_string_array strings
