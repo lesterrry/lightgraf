@@ -42,4 +42,15 @@ class LightgrafOptionalsTest < Minitest::Test
 		]
 		assert_string_array strings, ignore_nbsp: false
 	end
+
+	def test_disable_nobr
+		strings = [
+			[
+				%(Знаю, когда-нибудь все будет хорошо),
+				%(Знаю, когда-нибудь все будет хорошо),
+				{ disable_nobr: true, html_encode: true }
+			]
+		]
+		assert_string_array strings, ignore_nbsp: true
+	end
 end

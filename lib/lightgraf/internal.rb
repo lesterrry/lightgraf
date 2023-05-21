@@ -15,6 +15,7 @@ module Lightgraf
 			disable_quotes: false,
 			disable_hyphens: false,
 			disable_nbsp: false,
+			disable_nobr: false,
 			lang_check_max_take: 5,
 			nbsp_max_length: 3
 		)
@@ -27,12 +28,17 @@ module Lightgraf
 			quote_lang = []
 			last_space = nil
 			last_hyphen = nil
+			need_nobr_r = false
 			(0..text.length - 1).each do |i|
 				char = text[i]
 				if char == TAG_L
 					inside << :tag
+					fixed += TAG_L
+					next
 				elsif char == TAG_R
 					inside.pop if inside.last == :tag
+					fixed += TAG_R
+					next
 				elsif inside.last == :tag
 					fixed += char
 					next
@@ -41,19 +47,28 @@ module Lightgraf
 				elsif [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
 					inside.pop if inside.last == :quote_a
 				elsif SPACES.include?(char)
+					need_next = false
 					if !disable_nbsp and (i < nbsp_max_length or (!last_space.nil? and last_hyphen != i - 1 and (i - last_space) <= nbsp_max_length) or HYPHENS.include?(text[i + 1]))
 						fixed += NBSP
-						last_space = i
-						next
+						need_next = true
+					end
+					if need_nobr_r
+						fixed += HTML_NOBR_R
+						need_nobr_r = false
 					end
 					last_space = i
+					next if need_next
 				elsif HYPHENS.include?(char)
+					need_next = false
 					if !disable_hyphens and (i.zero? or last_space == i - 1)
-						fixed += HYPHEN
-						last_hyphen = i
-						next
+							fixed += HYPHEN
+							need_next = true
+					elsif html_encode and !disable_nobr and !need_nobr_r and last_space != i - 1 and !whitespace?(text[i + 1])
+						fixed.insert (last_space.nil? ? 0 : last_space + 1), HTML_NOBR_L
+						need_nobr_r = true
 					end
 					last_hyphen = i
+					next if need_next
 				elsif !disable_quotes and INCORRECT_QUOTES.include?(char)
 					case inside.last
 					when :quote_a
@@ -88,9 +103,10 @@ module Lightgraf
 					end
 					next
 				end
-				fixed += char
+				fixed += html_encode ? CGI.escape_html(char) : char
 			end
-			html_encode ? CGI.escape_html(fixed) : fixed
+			fixed += HTML_NOBR_R if need_nobr_r
+			fixed
 		end
 
 		# Shows whether cyrillic is present in a block of text
