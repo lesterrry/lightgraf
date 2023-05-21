@@ -25,6 +25,8 @@ module Lightgraf
 			inside = []
 			quote_char = []
 			quote_lang = []
+			last_space = nil
+			last_hyphen = nil
 			(0..text.length - 1).each do |i|
 				char = text[i]
 				if char == TAG_L
@@ -38,12 +40,20 @@ module Lightgraf
 					inside << :quote_a
 				elsif [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
 					inside.pop if inside.last == :quote_a
-				elsif !disable_nbsp and SPACES.include?(char) and (i < nbsp_max_length or (!HYPHENS.include?(text[i - 1]) and whitespace?(text[(i - nbsp_max_length)..(i - 1)])) or HYPHENS.include?(text[i + 1]))
-					fixed += NBSP
-					next
-				elsif !disable_hyphens and INCORRECT_HYPHENS.include?(char) and (i.zero? or SPACES.include?(text[i - 1]))
-					fixed += HYPHEN
-					next
+				elsif SPACES.include?(char)
+					if !disable_nbsp and (i < nbsp_max_length or (!last_space.nil? and last_hyphen != i - 1 and (i - last_space) <= nbsp_max_length) or HYPHENS.include?(text[i + 1]))
+						fixed += NBSP
+						last_space = i
+						next
+					end
+					last_space = i
+				elsif HYPHENS.include?(char)
+					if !disable_hyphens and (i.zero? or last_space == i - 1)
+						fixed += HYPHEN
+						last_hyphen = i
+						next
+					end
+					last_hyphen = i
 				elsif !disable_quotes and INCORRECT_QUOTES.include?(char)
 					case inside.last
 					when :quote_a

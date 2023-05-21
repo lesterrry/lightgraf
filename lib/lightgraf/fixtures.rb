@@ -5,7 +5,6 @@ module Lightgraf
 	# Flags & symbols to operate
 	module Fixtures
 		INCORRECT_QUOTES = %w[' " `].freeze
-		INCORRECT_HYPHENS = %w[- –].freeze
 		HYPHENS = %w[- – —].freeze
 		SPACES = [' ', ' ', ' ', ' ', ' '].freeze
 		TAG_L       = %(<)
