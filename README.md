@@ -1,4 +1,5 @@
 # Lightgraf
+[![Gem Version](https://badge.fury.io/rb/lightgraf.svg)](https://badge.fury.io/rb/lightgraf)
 
 Lightweight typography tool for Rails. It handles for you:
 - __Quotes__:
@@ -18,6 +19,14 @@ Lightweight typography tool for Rails. It handles for you:
     А что я? А я ничего\
     `↓` \
     А(NBSP)что я?(NBSP)А(NBSP)я(NBSP)ничего
+    
+- __No-breakables__:
+
+    Call me: 232-12-34\
+    `↓` \
+    Call me: \<nobr\>232-12-34\</nobr\>
+
+It is fast and efficient, handling complex text of ~5800 characters at 0.06 sec
 
 ## Installation
 
@@ -37,7 +46,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'lightgraf'
+fixed_text = Lightgraf.fix "My text"
+```
 
 ## Development
 
