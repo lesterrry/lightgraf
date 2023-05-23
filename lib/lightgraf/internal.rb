@@ -47,6 +47,10 @@ module Lightgraf
 				elsif [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
 					inside.pop if inside.last == :quote_a
 				elsif SPACES.include?(char)
+					if last_space == i - 1
+						last_space = i
+						next
+					end
 					need_next = false
 					if !disable_nbsp and (i < nbsp_max_length or (!last_space.nil? and last_hyphen != i - 1 and (i - last_space) <= nbsp_max_length) or HYPHENS.include?(text[i + 1]))
 						fixed += NBSP
@@ -58,6 +62,8 @@ module Lightgraf
 					end
 					last_space = i
 					next if need_next
+					fixed += SPACE
+					next
 				elsif HYPHENS.include?(char)
 					need_next = false
 					if !disable_hyphens and (i.zero? or last_space == i - 1)

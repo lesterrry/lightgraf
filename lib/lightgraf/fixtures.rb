@@ -6,7 +6,7 @@ module Lightgraf
 	module Fixtures
 		INCORRECT_QUOTES = %w[' " `].freeze
 		HYPHENS = %w[- – —].freeze
-		SPACES = [' ', ' ', ' ', ' ', ' '].freeze
+		SPACES = [' ', ' ', ' ', ' ', ' ', '​', '‍', '‌', 'ㅤ', '　', ' ', ' ', '⠀', '⁣', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '⁠'].freeze
 		TAG_L       = %(<)
 		TAG_R       = %(>)
 		QUOT_RU_A_L = %(«)
