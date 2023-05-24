@@ -156,7 +156,7 @@ class LightgrafQuotesEnTest < Minitest::Test
 			[
 				%(Henry proclaimed: 'It is not about "where to?", but "where?". I go for ablative'.),
 				%(Henry proclaimed: “It is not about ‘where to?’, but ‘where?’. I go for ablative”.)
-			],
+			]
 		]
 		assert_string_array strings
 	end
@@ -178,7 +178,7 @@ class LightgrafQuotesEnTest < Minitest::Test
 			[
 				%(The technician said: ‘Your car is cooked, especially if it has "V6"‘),
 				%(The technician said: ‘Your car is cooked, especially if it has “V6”‘)
-			],
+			]
 		]
 		assert_string_array strings
 	end
@@ -240,7 +240,7 @@ class LightgrafQuotesMixedTest < Minitest::Test
 			[
 				%(Henry proclaimed: 'It is not about "где?", but "куда?". I go for именительный'.),
 				%(Henry proclaimed: “It is not about „где?“, but „куда?“. I go for именительный”.)
-			],
+			]
 		]
 		assert_string_array strings
 	end

@@ -1,3 +1,9 @@
+# Handcrafted by Aydar N.
+# 2023
+#
+# me@aydar.media
+#
+
 # frozen_string_literal: true
 
 require 'lightgraf/fixtures'
@@ -11,11 +17,12 @@ module Lightgraf
 
 		def self.fix(
 			text,
-			html_encode: true,
+			format: :plaintext,
 			disable_quotes: false,
 			disable_hyphens: false,
 			disable_nbsp: false,
 			disable_nobr: false,
+			disable_escape: false,
 			lang_check_max_take: 5,
 			nbsp_max_length: 3
 		)
@@ -29,6 +36,7 @@ module Lightgraf
 			last_space = nil
 			last_hyphen = nil
 			need_nobr_r = false
+			offset = 0
 			(0..text.length - 1).each do |i|
 				char = text[i]
 				if char == TAG_L
@@ -42,6 +50,9 @@ module Lightgraf
 				elsif inside.last == :tag
 					fixed += char
 					next
+				elsif !disable_escape and format == :html and char == AMPERSAND
+					fixed += HTML_AMPERSAND
+					next
 				elsif [QUOT_RU_A_L, QUOT_EN_A_L].include?(char)
 					inside << :quote_a
 				elsif [QUOT_RU_A_R, QUOT_EN_A_R].include?(char)
@@ -53,7 +64,9 @@ module Lightgraf
 					end
 					need_next = false
 					if !disable_nbsp and (i < nbsp_max_length or (!last_space.nil? and last_hyphen != i - 1 and (i - last_space) <= nbsp_max_length) or HYPHENS.include?(text[i + 1]))
-						fixed += NBSP
+						ins = case format; when :html then HTML_NBSP; when :plaintext then NBSP; end
+						fixed += ins
+						offset += ins.length - 1
 						need_next = true
 					end
 					if need_nobr_r
@@ -67,10 +80,12 @@ module Lightgraf
 				elsif HYPHENS.include?(char)
 					need_next = false
 					if !disable_hyphens and (i.zero? or last_space == i - 1)
-							fixed += HYPHEN
+							ins = case format; when :html then HTML_HYPHEN; when :plaintext then HYPHEN; end
+							fixed += ins
+							offset += ins.length - 1
 							need_next = true
-					elsif html_encode and !disable_nobr and !need_nobr_r and last_space != i - 1 and !whitespace?(text[i + 1])
-						fixed.insert (last_space.nil? ? 0 : last_space + 1), HTML_NOBR_L
+					elsif format == :html and !disable_nobr and !need_nobr_r and last_space != i - 1 and !whitespace?(text[i + 1])
+						fixed.insert (last_space.nil? ? 0 : last_space + offset + 1), HTML_NOBR_L
 						need_nobr_r = true
 					end
 					last_hyphen = i
@@ -79,37 +94,37 @@ module Lightgraf
 					case inside.last
 					when :quote_a
 						if char == quote_char.last
-							fixed += quote_lang.last == :ru ? QUOT_RU_A_R : QUOT_EN_A_R
+							fixed += case format; when :html then (quote_lang.last == :ru ? HTML_QUOT_RU_A_R : HTML_QUOT_EN_A_R); when :plaintext then (quote_lang.last == :ru ? QUOT_RU_A_R : QUOT_EN_A_R); end
 							inside.pop
 							quote_char.pop
 							quote_lang.pop
 						else
 							quote_lang << (cyrillic?(text[i, lang_check_max_take]) ? :ru : :en)
-							fixed += quote_lang.last == :ru ? QUOT_RU_B_L : QUOT_EN_B_L
+							fixed += case format; when :html then (quote_lang.last == :ru ? HTML_QUOT_RU_B_L : HTML_QUOT_EN_B_L); when :plaintext then (quote_lang.last == :ru ? QUOT_RU_B_L : QUOT_EN_B_L); end
 							inside << :quote_b
 							quote_char << char
 						end
 					when :quote_b
 						if char == quote_char.last
-							fixed += quote_lang.last == :ru ? QUOT_RU_B_R : QUOT_EN_B_R
+							fixed += case format; when :html then (quote_lang.last == :ru ? HTML_QUOT_RU_B_R : HTML_QUOT_EN_B_R); when :plaintext then (quote_lang.last == :ru ? QUOT_RU_B_R : QUOT_EN_B_R); end
 							inside << :quote_a
 							quote_char.pop
 							quote_lang.pop
 						else
 							quote_lang << (cyrillic?(text[i, lang_check_max_take]) ? :ru : :en)
-							fixed += quote_lang.last == :ru ? QUOT_RU_A_L : QUOT_EN_A_L
+							fixed += case format; when :html then (quote_lang.last == :ru ? HTML_QUOT_RU_A_L : HTML_QUOT_EN_A_L); when :plaintext then (quote_lang.last == :ru ? QUOT_RU_A_L : QUOT_EN_A_L); end
 							inside << :quote_a
 							quote_char << char
 						end
 					when nil
 						quote_lang = (cyrillic?(text[i, lang_check_max_take]) ? [:ru] : [:en])
-						fixed += quote_lang.last == :ru ? QUOT_RU_A_L : QUOT_EN_A_L
+						fixed += case format; when :html then (quote_lang.last == :ru ? HTML_QUOT_RU_A_L : HTML_QUOT_EN_A_L); when :plaintext then (quote_lang.last == :ru ? QUOT_RU_A_L : QUOT_EN_A_L); end
 						inside << :quote_a
 						quote_char = [char]
 					end
 					next
 				end
-				fixed += html_encode ? CGI.escape_html(char) : char
+				fixed += char
 			end
 			fixed += HTML_NOBR_R if need_nobr_r
 			fixed

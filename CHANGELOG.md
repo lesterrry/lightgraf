@@ -1,2 +1,3 @@
 ## In this update:
-- Fixing complex whitespace cases
+- Added formatting options
+- Security improvements

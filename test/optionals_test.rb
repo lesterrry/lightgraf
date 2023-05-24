@@ -48,9 +48,20 @@ class LightgrafOptionalsTest < Minitest::Test
 			[
 				%(Знаю, когда-нибудь все будет хорошо),
 				%(Знаю, когда-нибудь все будет хорошо),
-				{ disable_nobr: true, html_encode: true }
+				{ disable_nobr: true, format: :html }
 			]
 		]
-		assert_string_array strings, ignore_nbsp: true
+		assert_string_array strings
+	end
+
+	def test_disable_escape
+		strings = [
+			[
+				%(Плачу & смеюсь),
+				%(Плачу & смеюсь),
+				{ disable_escape: true, format: :html }
+			]
+		]
+		assert_string_array strings
 	end
 end
