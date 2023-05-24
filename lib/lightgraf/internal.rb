@@ -80,7 +80,9 @@ module Lightgraf
 				elsif HYPHENS.include?(char)
 					need_next = false
 					if !disable_hyphens and (i.zero? or last_space == i - 1)
-							fixed += HYPHEN
+							ins = case format; when :html then HTML_HYPHEN; when :plaintext then HYPHEN; end
+							fixed += ins
+							offset += ins.length - 1
 							need_next = true
 					elsif format == :html and !disable_nobr and !need_nobr_r and last_space != i - 1 and !whitespace?(text[i + 1])
 						fixed.insert (last_space.nil? ? 0 : last_space + offset + 1), HTML_NOBR_L
