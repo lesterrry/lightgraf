@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.6.3'
 
   spec.summary       = 'Lightweight typography helper for Russian language'
-  # spec.description   = "TODO: Write a longer description"
+  spec.description   = 'Lightgraf is a lightweight typography tool intended for use in Rails primarily with Russian. Formats quotes, hyphens and whitespaces.'
   spec.homepage      = 'https://rubygems.org/gems/lightgraf'
   spec.license       = 'MIT'
 
@@ -26,7 +26,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '~> 1.17'
+  spec.add_development_dependency 'bundler', '>= 2.2.33'
   spec.add_development_dependency 'irb'
   spec.add_development_dependency 'minitest', '~> 5.0'
   spec.add_development_dependency 'rake', '~> 13.0'
